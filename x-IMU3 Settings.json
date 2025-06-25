@@ -1,0 +1,10 @@
+{
+  "wireless_mode": 1,
+  "inertial_message_rate_divisor": 0,
+  "magnetometer_message_rate_divisor": 0,
+  "ahrs_message_rate_divisor": 8,
+  "high_g_accelerometer_message_rate_divisor": 0,
+  "temperature_message_rate_divisor": 5,
+  "battery_message_rate_divisor": 5,
+  "rssi_message_rate_divisor": 1
+}
