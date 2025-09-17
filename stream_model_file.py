@@ -1,10 +1,12 @@
 import time
 
 import glover
+import ximu3s
+
 import imumocap
 import imumocap.file
 import imumocap.solvers
-import ximu3s
+import imumocap.viewer
 from imumocap.solvers import Mounting
 
 # Load model
