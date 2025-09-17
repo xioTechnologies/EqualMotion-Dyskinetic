@@ -20,17 +20,17 @@ class Connection:
     def send(self, root: Link, joints: dict[str:Joint]) -> None:
         links = {l.name: l for l in root.flatten()}
 
-        neck_bend, neck_tilt, neck_twist = joints["Neck"].get()
+        neck_alpha, neck_beta, neck_gamma = joints["Neck"].get()
 
-        torso_bend, torso_tilt, torso_twist = joints["Upper Torso"].get()
+        torso_alpha, torso_beta, torso_gamma = joints["Upper Torso"].get()
 
-        left_shoulder_bend, left_shoulder_tilt, left_shoulder_twist = joints["Left Shoulder"].get()
+        left_shoulder_alpha, left_shoulder_beta, left_shoulder_gamma = joints["Left Shoulder"].get()
 
-        right_shoulder_bend, right_shoulder_tilt, right_shoulder_twist = joints["Right Shoulder"].get()
+        right_shoulder_alpha, right_shoulder_beta, right_shoulder_gamma = joints["Right Shoulder"].get()
 
-        left_elbow_bend, _, left_elbow_twist = joints["Left Elbow"].get()
+        left_elbow_alpha, _, left_elbow_gamma = joints["Left Elbow"].get()
 
-        right_elbow_bend, _, right_elbow_twist = joints["Right Elbow"].get()
+        right_elbow_alpha, _, right_elbow_gamma = joints["Right Elbow"].get()
 
         left_hand_xyz = links["Left Forearm"].get_end_world().xyz - root.get_joint_world().xyz
 
@@ -49,12 +49,12 @@ class Connection:
             "{"
             + ",".join(
                 [
-                    f'"neck":{{"bend":{format(neck_bend)},"tilt":{format(neck_tilt)},"twist":{format(neck_twist)}}},'
-                    f'"torso":{{"bend":{format(torso_bend)},"tilt":{format(torso_tilt)},"twist":{format(torso_twist)}}},'
-                    f'"left_shoulder":{{"bend":{format(left_shoulder_bend)},"tilt":{format(left_shoulder_tilt)},"twist":{format(left_shoulder_twist)}}},'
-                    f'"right_shoulder":{{"bend":{format(right_shoulder_bend)},"tilt":{format(right_shoulder_tilt)},"twist":{format(right_shoulder_twist)}}},'
-                    f'"left_elbow":{{"bend":{format(left_elbow_bend)},"twist":{format(left_elbow_twist)}}},'
-                    f'"right_elbow":{{"bend":{format(right_elbow_bend)},"twist":{format(right_elbow_twist)}}},'
+                    f'"neck":{{"alpha":{format(neck_alpha)},"beta":{format(neck_beta)},"gamma":{format(neck_gamma)}}},'
+                    f'"torso":{{"alpha":{format(torso_alpha)},"beta":{format(torso_beta)},"gamma":{format(torso_gamma)}}},'
+                    f'"left_shoulder":{{"alpha":{format(left_shoulder_alpha)},"beta":{format(left_shoulder_beta)},"gamma":{format(left_shoulder_gamma)}}},'
+                    f'"right_shoulder":{{"alpha":{format(right_shoulder_alpha)},"beta":{format(right_shoulder_beta)},"gamma":{format(right_shoulder_gamma)}}},'
+                    f'"left_elbow":{{"alpha":{format(left_elbow_alpha)},"gamma":{format(left_elbow_gamma)}}},'
+                    f'"right_elbow":{{"alpha":{format(right_elbow_alpha)},"gamma":{format(right_elbow_gamma)}}},'
                     f'"left_hand_xyz":[{format(left_hand_xyz[0])},{format(left_hand_xyz[1])},{format(left_hand_xyz[2])}],'
                     f'"left_hand_distance": {format(left_hand_distance)},'
                     f'"right_hand_xyz":[{format(right_hand_xyz[0])},{format(right_hand_xyz[1])},{format(right_hand_xyz[2])}],'
