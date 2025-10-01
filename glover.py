@@ -42,6 +42,10 @@ class Connection:
 
         hands_distance = np.linalg.norm(links["Right Forearm"].get_end_world().xyz - links["Left Forearm"].get_end_world().xyz)
 
+        left_forearm = links["Left Forearm"].get_imu_world().quaternion
+        
+        right_forearm = links["Right Forearm"].get_imu_world().quaternion
+
         def format(value):
             return f"{value:.6f}"
 
@@ -59,7 +63,9 @@ class Connection:
                     f'"left_hand_distance": {format(left_hand_distance)},'
                     f'"right_hand_xyz":[{format(right_hand_xyz[0])},{format(right_hand_xyz[1])},{format(right_hand_xyz[2])}],'
                     f'"right_hand_distance":{format(right_hand_distance)},'
-                    f'"hands_distance":{format(hands_distance)}'
+                    f'"hands_distance":{format(hands_distance)},'
+                    f'"left_forearm":[{format(left_forearm[0])}, {format(left_forearm[1])}, {format(left_forearm[2])}, {format(left_forearm[3])}],'
+                    f'"right_forearm":[{format(right_forearm[0])}, {format(right_forearm[1])}, {format(right_forearm[2])}, {format(right_forearm[3])}]'
                 ]
             )
             + "}"
