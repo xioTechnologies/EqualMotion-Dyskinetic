@@ -1,7 +1,7 @@
 import socket
 
 import numpy as np
-from imumocap import Joint, Link
+from imumocap import Joint, Link, Matrix
 
 
 class Connection:
@@ -42,9 +42,8 @@ class Connection:
 
         hands_distance = np.linalg.norm(links["Right Forearm"].get_end_world().xyz - links["Left Forearm"].get_end_world().xyz)
 
-        left_forearm = links["Left Forearm"].get_imu_world().quaternion
-        
-        right_forearm = links["Right Forearm"].get_imu_world().quaternion
+        left_forearm = (links["Left Forearm"].get_joint_world() * Matrix.align_py_nx_pz()).quaternion
+        right_forearm = (links["Right Forearm"].get_joint_world() * Matrix.align_ny_px_pz()).quaternion
 
         def format(value):
             return f"{value:.6f}"
