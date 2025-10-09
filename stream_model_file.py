@@ -22,6 +22,8 @@ viewer_connection = imumocap.viewer.Connection()
 
 glover_connection = glover.Connection()
 
+calibrated_heading = 0 
+
 while True:
     time.sleep(1 / 30)  # 30 fps
 
@@ -30,11 +32,11 @@ while True:
 
         time.sleep(2)
 
-        imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, calibration_pose, Mounting.Z_FORWARDS)
+        calibrated_heading = imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, calibration_pose, Mounting.Z_FORWARDS)
 
         print("Calibrated")
 
-    imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()})
+    imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
 
     viewer_connection.send(
         [
