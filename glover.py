@@ -42,8 +42,10 @@ class Connection:
 
         hands_distance = np.linalg.norm(links["Right Forearm"].get_end_world().xyz - links["Left Forearm"].get_end_world().xyz)
 
-        left_forearm = (links["Left Forearm"].get_joint_world() * Matrix.align_py_nx_pz()).quaternion
-        right_forearm = (links["Right Forearm"].get_joint_world() * Matrix.align_ny_px_pz()).quaternion
+        nwu_to_ned = Matrix(rot_x=180)  # north west up to north east down
+
+        left_glove = (nwu_to_ned * Matrix(rotation=(links["Left Forearm"].get_joint_world() * Matrix.align_py_px_nz()), xyz=links["Left Forearm"].get_end_world().xyz)).quaternion
+        right_glove = (nwu_to_ned * Matrix(rotation=(links["Right Forearm"].get_joint_world() * Matrix.align_ny_nx_nz()), xyz=links["Right Forearm"].get_end_world().xyz)).quaternion
 
         def format(value):
             return f"{value:.6f}"
@@ -63,8 +65,8 @@ class Connection:
                     f'"right_hand_xyz":[{format(right_hand_xyz[0])},{format(right_hand_xyz[1])},{format(right_hand_xyz[2])}],'
                     f'"right_hand_distance":{format(right_hand_distance)},'
                     f'"hands_distance":{format(hands_distance)},'
-                    f'"left_forearm":[{format(left_forearm[0])}, {format(left_forearm[1])}, {format(left_forearm[2])}, {format(left_forearm[3])}],'
-                    f'"right_forearm":[{format(right_forearm[0])}, {format(right_forearm[1])}, {format(right_forearm[2])}, {format(right_forearm[3])}]'
+                    f'"left_glove":[{format(left_glove[0])}, {format(left_glove[1])}, {format(left_glove[2])}, {format(left_glove[3])}],'
+                    f'"right_glove":[{format(right_glove[0])}, {format(right_glove[1])}, {format(right_glove[2])}, {format(right_glove[3])}]'
                 ]
             )
             + "}"
