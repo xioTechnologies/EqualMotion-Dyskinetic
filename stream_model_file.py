@@ -22,9 +22,9 @@ imus = ximu3s.setup([l.name for l in root.flatten() if l.name])
 # Stream to IMU Mocap Viewer and Glover
 viewer_connection = imumocap.viewer.Connection()
 
-glover_connection = glover.Connection("10.0.0.9", 5000)
+glover_connection = glover.Connection()
 
-calibrated_heading = 0 
+calibrated_heading = 0
 
 while True:
     time.sleep(1 / 30)  # 30 fps
@@ -42,15 +42,10 @@ while True:
 
     links = {l.name: l for l in root.flatten()}
 
-    left_forearm = Matrix(rotation=(links["Left Forearm"].get_joint_world() * imumocap.Matrix.align_py_nx_pz()), xyz=links["Left Forearm"].get_end_world().xyz)
-    right_forearm = Matrix(rotation=(links["Right Forearm"].get_joint_world() * imumocap.Matrix.align_ny_px_pz()), xyz=links["Right Forearm"].get_end_world().xyz)
-    
     viewer_connection.send(
         [
             *imumocap.viewer.link_to_primitives(root),
             *imumocap.viewer.joints_to_primitives(joints, "Left"),
-            Axes(left_forearm, 0.25),
-            Axes(right_forearm, 0.25)
         ]
     )
 
