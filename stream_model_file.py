@@ -40,6 +40,8 @@ while True:
 
     imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
 
+    imumocap.solvers.translate(root, [0, 0, 0.5])
+    
     links = {l.name: l for l in root.flatten()}
 
     viewer_connection.send(
