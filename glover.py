@@ -32,11 +32,11 @@ class Connection:
 
         right_elbow_alpha, _, right_elbow_gamma = joints["Right Elbow"].get()
 
-        left_hand_xyz = links["Left Forearm"].get_end_world().xyz - root.get_joint_world().xyz
+        left_hand_xyz = links["Left Forearm"].get_end_world().xyz
 
         left_hand_distance = np.linalg.norm(left_hand_xyz)
 
-        right_hand_xyz = links["Right Forearm"].get_end_world().xyz - root.get_joint_world().xyz
+        right_hand_xyz = links["Right Forearm"].get_end_world().xyz
 
         right_hand_distance = np.linalg.norm(right_hand_xyz)
 
