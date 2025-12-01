@@ -69,7 +69,7 @@ class Imu:
         return button_pressed
 
 
-def setup(names: list[str]) -> dict[str, Imu]:
+def setup(names: list[str], preverified: bool = False) -> dict[str, Imu]:
     while True:
         messages = ximu3.NetworkAnnouncement().get_messages_after_short_delay()
 
@@ -79,7 +79,7 @@ def setup(names: list[str]) -> dict[str, Imu]:
             input("No devices found. Press Enter to try again.")
             continue
 
-        if _yes_or_no("Would you like to reassign all devices?") and _yes_or_no("Are you sure?"):
+        if (not verified or not preverified) and _yes_or_no("Would you like to reassign all devices?") and _yes_or_no("Are you sure?"):
             _assign(names, messages)
         elif verified:
             break

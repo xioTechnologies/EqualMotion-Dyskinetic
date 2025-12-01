@@ -21,7 +21,7 @@ imumocap.file.load_pose("custom_pose.json", joints)
 calibration_pose = imumocap.get_pose(root)
 
 # Connect to and configure IMUs
-imus = ximu3s.setup([l.name for l in root.flatten() if l.name])
+imus = ximu3s.setup([l.name for l in root.flatten() if l.name], True)
 
 # Stream to IMU Mocap Viewer and Glover
 viewer_connection = imumocap.viewer.Connection()
