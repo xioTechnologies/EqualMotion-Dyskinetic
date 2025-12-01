@@ -29,7 +29,7 @@ calibrated_heading = 0
 while True:
     time.sleep(1 / 30)  # 30 fps
 
-    if any([i.button_pressed for i in imus.values()]):
+    if any([i.button_pressed for i in imus.values()]):        
         print("Please hold the calibration pose")
 
         time.sleep(5)
