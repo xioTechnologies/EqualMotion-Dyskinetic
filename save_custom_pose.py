@@ -14,10 +14,6 @@ import ximu3s
 # Load model
 root, joints = imumocap.file.load_model("model.json")
 
-imumocap.file.load_pose("custom_pose.json", joints)
-# imumocap.file.load_pose("kris_pose.json", joints)
-# imumocap.file.load_pose("chair_pose.json", joints)
-
 calibration_pose = imumocap.get_pose(root)
 
 # Connect to and configure IMUs
@@ -30,22 +26,40 @@ glover_connection = glover.Connection()
 
 calibrated_heading = 0
 
+capture_pose = False
+
 while True:
     time.sleep(1 / 30)  # 30 fps
 
-    if any([i.button_pressed for i in imus.values()]):
-        print("Please hold the calibration pose")
+    if any([i.button_pressed for i in imus.values()]):    
 
-        time.sleep(5)
+        if capture_pose: 
+            print("Please hold your custom calibration pose")
 
-        calibrated_heading = imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, calibration_pose, Mounting.Z_FORWARDS)
+            time.sleep(5)
 
-        print("Calibrated")
+            print("Saving current pose to 'custom_pose.json'")
+            
+            imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
+
+            imumocap.file.save_pose("custom_pose.json", joints)
+            
+        else: 
+            print("Please hold the calibration pose")
+
+            time.sleep(5)
+
+            calibrated_heading = imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, calibration_pose, Mounting.Z_FORWARDS)
+
+            print("Calibrated")
+
+        capture_pose = not capture_pose
+                
 
     imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
 
     imumocap.solvers.translate(root, [0, 0, 0.5])
-    
+
     links = {l.name: l for l in root.flatten()}
 
     viewer_connection.send(
