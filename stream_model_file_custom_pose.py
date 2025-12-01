@@ -14,6 +14,9 @@ import ximu3s
 # Load model
 root, joints = imumocap.file.load_model("model.json")
 
+imumocap.file.load_pose("kris_pose.json", joints)
+# imumocap.file.load_pose("chair_pose.json", joints)
+
 calibration_pose = imumocap.get_pose(root)
 
 # Connect to and configure IMUs
@@ -41,7 +44,7 @@ while True:
     imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
 
     imumocap.solvers.translate(root, [0, 0, 0.5])
-
+    
     links = {l.name: l for l in root.flatten()}
 
     viewer_connection.send(
