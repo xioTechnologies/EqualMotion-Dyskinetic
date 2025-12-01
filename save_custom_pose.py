@@ -31,7 +31,7 @@ capture_pose = False
 while True:
     time.sleep(1 / 30)  # 30 fps
 
-    if any([i.button_pressed for i in imus.values()]):    
+    if any([i.button_pressed for i in imus.values()]):     
 
         if capture_pose: 
             print("Please hold your custom calibration pose")
@@ -40,7 +40,13 @@ while True:
             
             temp_imus = {n: i.matrix for n, i in imus.items()}
 
-            calibrated_heading = (temp_imus[root.name] * Mounting.Z_FORWARDS.value).rot_xyz[2]
+            # calibrated_heading = (temp_imus[root.name] * Mounting.Z_FORWARDS.value).rot_xyz[2]
+
+            # root.joint = Matrix(rotation=(Matrix(rot_z=calibrated_heading) * root.joint).rotation, xyz=root.joint.xyz)
+
+            now_pose = imumocap.get_pose(root)
+
+            calibrated_heading = imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, now_pose, Mounting.Z_FORWARDS)            
 
             imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
 
