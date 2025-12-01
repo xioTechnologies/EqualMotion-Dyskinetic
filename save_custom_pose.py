@@ -37,18 +37,14 @@ while True:
             print("Please hold your custom calibration pose")
 
             time.sleep(5)
-            
-            temp_imus = {n: i.matrix for n, i in imus.items()}
-
-            # calibrated_heading = (temp_imus[root.name] * Mounting.Z_FORWARDS.value).rot_xyz[2]
-
-            # root.joint = Matrix(rotation=(Matrix(rot_z=calibrated_heading) * root.joint).rotation, xyz=root.joint.xyz)
-
-            now_pose = imumocap.get_pose(root)
-
-            calibrated_heading = imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, now_pose, Mounting.Z_FORWARDS)            
 
             imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
+            time.sleep(1 / 30) 
+            imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
+
+            adjust_heading = root.joint.rot_xyz[2]
+
+            root.joint = Matrix(rotation=(Matrix(rot_z=-adjust_heading) * root.joint).rotation, xyz=root.joint.xyz)
 
             imumocap.file.save_pose("custom_pose.json", joints)
 
