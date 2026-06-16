@@ -8,16 +8,15 @@ from imumocap import Matrix
 from imumocap.solvers import Mounting
 from imumocap.viewer.primatives import Axes
 
+import hardware
 import glover
-import ximu3s
 
 # Load model
-root, joints = imumocap.file.load_model("model.json")
+model = imumocap.file.load_model("model.json")
 
-calibration_pose = imumocap.get_pose(root)
+calibration_pose = model.get_pose()
 
-# Connect to and configure IMUs
-imus = ximu3s.setup([l.name for l in root.flatten() if l.name], True)
+suit = hardware.Ximu3s(model)
 
 # Stream to IMU Mocap Viewer and Glover
 viewer_connection = imumocap.viewer.Connection()
@@ -29,26 +28,20 @@ calibrated_heading = 0
 while True:
     time.sleep(1 / 30)  # 30 fps
 
-    if any([i.button_pressed for i in imus.values()]):        
-        print("Please hold the calibration pose")
 
-        time.sleep(5)
+    if suit.get_button_pressed():
+        viewer_connection.send_text("Please Hold the Calibration Pose")
 
-        calibrated_heading = imumocap.solvers.calibrate(root, {n: i.matrix for n, i in imus.items()}, calibration_pose, Mounting.Z_FORWARDS)
+        time.sleep(2)
 
-        print("Calibrated")
+        calibrated_heading = imumocap.solvers.calibrate(model, suit.get_imus(), calibration_pose, Mounting.Z_FORWARD)
 
-    imumocap.set_pose_from_imus(root, {n: i.matrix for n, i in imus.items()}, -calibrated_heading)
+        viewer_connection.send_text("Calibrated", 2)
 
-    imumocap.solvers.translate(root, [0, 0, 0.5])
+    model.set_pose_from_imus(suit.get_imus(), -calibrated_heading)
 
-    links = {l.name: l for l in root.flatten()}
+    imumocap.solvers.translate(model, [0, 0, 0.5])
 
-    viewer_connection.send(
-        [
-            *imumocap.viewer.link_to_primitives(root),
-            *imumocap.viewer.joints_to_primitives(joints, "Left"),
-        ]
-    )
+    viewer_connection.send(imumocap.viewer.model_to_primitives(model, mirror="Left"))
 
-    glover_connection.send(root, joints)
+    glover_connection.send(model)

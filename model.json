@@ -515,37 +515,5 @@
             "beta_limit": null,
             "gamma_limit": null
         }
-    },
-    "pose": {
-        "Neck": {
-            "alpha": 0,
-            "beta": 0,
-            "gamma": 0
-        },
-        "Left Elbow": {
-            "alpha": 0,
-            "beta": 0,
-            "gamma": 0
-        },
-        "Left Shoulder": {
-            "alpha": 0,
-            "beta": 0,
-            "gamma": 0
-        },
-        "Right Elbow": {
-            "alpha": 0,
-            "beta": 0,
-            "gamma": 0
-        },
-        "Right Shoulder": {
-            "alpha": 0,
-            "beta": 0,
-            "gamma": 0
-        },
-        "Upper Torso": {
-            "alpha": 0,
-            "beta": 0,
-            "gamma": 0
-        }
     }
 }

@@ -1,7 +1,7 @@
 import socket
 
 import numpy as np
-from imumocap import Joint, Link, Matrix
+from imumocap import Model, Joint, Link, Matrix
 
 
 class Connection:
@@ -17,35 +17,35 @@ class Connection:
     def __del__(self) -> None:
         self.__socket.close()
 
-    def send(self, root: Link, joints: dict[str:Joint]) -> None:
-        links = {l.name: l for l in root.flatten()}
+    def send(self, model: Model) -> None:
+        # links = {l.name: l for l in root.flatten()}
 
-        neck_alpha, neck_beta, neck_gamma = joints["Neck"].get()
+        neck_alpha, neck_beta, neck_gamma = model.joints["Neck"].get()
 
-        torso_alpha, torso_beta, torso_gamma = joints["Upper Torso"].get()
+        torso_alpha, torso_beta, torso_gamma = model.joints["Upper Torso"].get()
 
-        left_shoulder_alpha, left_shoulder_beta, left_shoulder_gamma = joints["Left Shoulder"].get()
+        left_shoulder_alpha, left_shoulder_beta, left_shoulder_gamma = model.joints["Left Shoulder"].get()
 
-        right_shoulder_alpha, right_shoulder_beta, right_shoulder_gamma = joints["Right Shoulder"].get()
+        right_shoulder_alpha, right_shoulder_beta, right_shoulder_gamma = model.joints["Right Shoulder"].get()
 
-        left_elbow_alpha, _, left_elbow_gamma = joints["Left Elbow"].get()
+        left_elbow_alpha, _, left_elbow_gamma = model.joints["Left Elbow"].get()
 
-        right_elbow_alpha, _, right_elbow_gamma = joints["Right Elbow"].get()
+        right_elbow_alpha, _, right_elbow_gamma = model.joints["Right Elbow"].get()
 
-        left_hand_xyz = links["Left Forearm"].get_end_world().xyz
+        left_hand_xyz = model.links["Left Forearm"].get_end_world().xyz
 
         left_hand_distance = np.linalg.norm(left_hand_xyz)
 
-        right_hand_xyz = links["Right Forearm"].get_end_world().xyz
+        right_hand_xyz = model.links["Right Forearm"].get_end_world().xyz
 
         right_hand_distance = np.linalg.norm(right_hand_xyz)
 
-        hands_distance = np.linalg.norm(links["Right Forearm"].get_end_world().xyz - links["Left Forearm"].get_end_world().xyz)
+        hands_distance = np.linalg.norm(model.links["Right Forearm"].get_end_world().xyz - model.links["Left Forearm"].get_end_world().xyz)
 
         nwu_to_ned = Matrix(rot_x=180)  # north west up to north east down
 
-        left_glove = (nwu_to_ned * Matrix(rotation=(links["Left Forearm"].get_joint_world() * Matrix.align_py_px_nz()), xyz=links["Left Forearm"].get_end_world().xyz)).quaternion
-        right_glove = (nwu_to_ned * Matrix(rotation=(links["Right Forearm"].get_joint_world() * Matrix.align_ny_nx_nz()), xyz=links["Right Forearm"].get_end_world().xyz)).quaternion
+        left_glove = (nwu_to_ned * Matrix(rotation=(model.links["Left Forearm"].get_joint_world() * Matrix.align_py_px_nz()), xyz=model.links["Left Forearm"].get_end_world().xyz)).quaternion
+        right_glove = (nwu_to_ned * Matrix(rotation=(model.links["Right Forearm"].get_joint_world() * Matrix.align_ny_nx_nz()), xyz=model.links["Right Forearm"].get_end_world().xyz)).quaternion
 
         def format(value):
             return f"{value:.6f}"
